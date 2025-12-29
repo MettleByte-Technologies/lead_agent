@@ -1,0 +1,40 @@
+{
+  "id": "dbdd292f-9c17-4fd0-b908-565eb275f0a1",
+  "createdAt": "2025-12-25T12:40:53.591Z",
+  "updatedAt": "2025-12-25T12:42:11.024Z",
+  "type": "apiRequest",
+  "function": {
+    "name": "api_request_tool"
+  },
+  "messages": [
+    {
+      "type": "request-start",
+      "blocking": false
+    }
+  ],
+  "orgId": "3875917d-9cca-477e-bd3f-61483c77d1d5",
+  "name": "send_booking_link",
+  "url": "https://piyushnew.app.n8n.cloud/webhook/33acea6a-c8f8-4863-90ab-d861e60b8852",
+  "method": "POST",
+  "body": {
+    "type": "object",
+    "required": [
+      "lead_id"
+    ],
+    "properties": {
+      "lead_id": {
+        "description": "This is lead_id and you need to get this value from assistant overrides.",
+        "type": "string",
+        "default": "2"
+      }
+    }
+  },
+  "variableExtractionPlan": {
+    "schema": {
+      "type": "object",
+      "required": [],
+      "properties": {}
+    },
+    "aliases": []
+  }
+}

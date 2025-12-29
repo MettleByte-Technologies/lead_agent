@@ -1,0 +1,40 @@
+{
+  "id": "a11267d0-2967-4a2f-bf78-d84852c257a5",
+  "createdAt": "2025-12-24T11:55:29.991Z",
+  "updatedAt": "2025-12-24T11:58:39.859Z",
+  "type": "function",
+  "function": {
+    "name": "log_outcome",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "notes": {
+          "description": "Short summary of what happened in the call",
+          "type": "string"
+        },
+        "outcome": {
+          "description": "Final outcome of the call",
+          "type": "string",
+          "enum": [
+            "MEETING_BOOKED",
+            "QUALIFIED",
+            "NOT_QUALIFIED",
+            "NO_ANSWER",
+            "ERROR"
+          ]
+        }
+      },
+      "required": [
+        "outcome",
+        "notes"
+      ]
+    }
+  },
+  "messages": [
+    {
+      "type": "request-start",
+      "blocking": false
+    }
+  ],
+  "orgId": "3875917d-9cca-477e-bd3f-61483c77d1d5"
+}

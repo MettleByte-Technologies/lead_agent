@@ -1,0 +1,1070 @@
+{
+  "name": "lead_agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        144
+      ],
+      "id": "d6203ac4-42b7-4e2f-9ef6-fbdd44e4d3b3",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        144
+      ],
+      "id": "dbdfa34a-e626-4528-88d1-786d7b2df3db",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst allLeads = $input.all();\nconst filtered = allLeads.filter(item => {\n  const data = item.json;\n\n  // Must not be currently calling\n  if (data.Status == 'calling') return false;\n\n  // Must not be currently calling (duplicate prevention)\n  if (data.Outcome === 'NO_ANSWER') return false;\n \n  return true;\n});\n\nreturn filtered;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        144
+      ],
+      "id": "bf95323e-d7b8-4bce-8f8a-4b683ceec8a6",
+      "name": "Filter Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        656,
+        144
+      ],
+      "id": "5a3d9668-bed9-4d52-b821-9e682c5a9bba",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        144
+      ],
+      "id": "c5d08bae-7c3f-43b0-b2ea-202a668931b8"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "#": "={{ $json.assistantOverrides.variableValues.lead_id }}",
+            "Status": "calling"
+          },
+          "matchingColumns": [
+            "#"
+          ],
+          "schema": [
+            {
+              "id": "#",
+              "displayName": "#",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Outcome",
+              "displayName": "Outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        80
+      ],
+      "id": "4fdd3773-1c95-4031-b5f6-37a9e8a9218e",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call/phone",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $vars.VAPI_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($node['Prepare Vapi Payload'].json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1328,
+        80
+      ],
+      "id": "2e90419e-ab88-4ea1-b77b-4ad01b65bea1",
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4f38e422-40d5-4154-9fab-30f2707003bc",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1552,
+        80
+      ],
+      "id": "002c7e7e-3e44-47a6-a5a3-9006fa73cbe8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "#": "={{ $('Loop Over Items').item.json['#'] }}",
+            "Status": ""
+          },
+          "matchingColumns": [
+            "#"
+          ],
+          "schema": [
+            {
+              "id": "#",
+              "displayName": "#",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Outcome",
+              "displayName": "Outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1776,
+        0
+      ],
+      "id": "0a16abfd-954a-4793-be44-fd0e3a5dca4d",
+      "name": "Clear Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Vapi end-of-call webhook\n// Minimal, safe, and aligned with lead qualification flow\nconst body = $input.first().json.body;\nconst message = $input.first().json?.body?.message;\n\nif (!message) {\n  throw new Error('Missing message in webhook payload');\n}\n\n// Ensure this is the correct event\nif (message.type !== 'end-of-call-report') {\n  throw new Error(`Unexpected webhook type: ${message.type}`);\n}\n\nconst call = message.call || {};\nconst artifact = message.artifact || {};\nconst endedReason = message.endedReason || 'unknown';\n\n// Extract lead_id (passed via assistantOverrides.variableValues)\nconst leadId = call.assistantOverrides?.variableValues?.lead_id;\n\nif (!leadId) {\n  throw new Error('Missing lead_id in assistantOverrides.variableValues');\n}\n\n// Basic call status\nconst callStatus = call.status || 'unknown';\n\n// Defaults\nlet outcome = 'NO_ANSWER';\nlet notes = '';\nlet transcript = artifact.transcript || '';\nlet callDuration = 0;\n\n// Calculate duration (safe)\nif (message.startedAt && message.endedAt) {\n  const start = new Date(message.startedAt).getTime();\n  const end = new Date(message.endedAt).getTime();\n  if (!isNaN(start) && !isNaN(end)) {\n    callDuration = Math.max(0, (end - start) / 1000);\n  }\n}\n\n// If call failed at system level\nif (callStatus === 'failed') {\n  outcome = 'ERROR';\n  notes = `Call failed: ${endedReason}`;\n} \n// Look for tool call outcome\nelse if (artifact.messages && Array.isArray(artifact.messages)) {\n  let outcomeFound = false;\n\n  for (const msg of artifact.messages) {\n    if (!msg.toolCalls) continue;\n\n    for (const toolCall of msg.toolCalls) {\n      if (toolCall.function?.name === 'log_outcome') {\n        const args =\n          typeof toolCall.function.arguments === 'string'\n            ? JSON.parse(toolCall.function.arguments)\n            : toolCall.function.arguments;\n\n        outcome = args.outcome || 'NO_ANSWER';\n        notes = args.notes || '';\n        outcomeFound = true;\n        break;\n      }\n    }\n\n    if (outcomeFound) break;\n  }\n\n  if (!outcomeFound) {\n    outcome = 'NO_ANSWER';\n    notes = 'No outcome returned by assistant';\n  }\n}\n\n// Final payload returned to n8n workflow\nreturn {\n  lead_id: body?.message?.artifact?.variables?.lead_id,\n  call_id: call.id || '',\n  call_status: callStatus,\n  outcome,\n  notes,\n  transcript,\n  recording_url: artifact.recording?.stereoUrl || call.recordingUrl || '',\n  call_duration_sec: callDuration\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        368
+      ],
+      "id": "b33904d4-64da-4735-a8e1-53a8b3c7e40e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "#": "={{ $json.lead_id }}",
+            "Status": "={{ $json.call_status }}",
+            "Outcome": "={{ $json.outcome }}",
+            "Note": "={{ $json.notes }}"
+          },
+          "matchingColumns": [
+            "#"
+          ],
+          "schema": [
+            {
+              "id": "#",
+              "displayName": "#",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Outcome",
+              "displayName": "Outcome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Note",
+              "displayName": "Note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        368
+      ],
+      "id": "ed39306d-1433-4ad1-a159-89937f0459f8",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nfunction normalizePhone(phone) {\n  if (typeof phone === 'undefined' || phone === null) {\n    throw new Error('Phone number is undefined or null.');\n  }\n  let cleaned = phone.toString().replace(/[\\s\\-\\(\\)\\.\\+]/g, '');\n\n  // Default to India (10-digit mobile)\n  if (cleaned.length === 10) {\n    return '+91' + cleaned;\n  }\n\n  // Already international\n  if (cleaned.length >= 11 && cleaned.length <= 15) {\n    return '+' + cleaned;\n  }\n\n  throw new Error('Invalid phone number');\n}\n\nreturn {\n  assistantId: $vars.VAPI_ASSISTANT_ID,\n  phoneNumberId: $vars.PHONE_NUMBER_ID,\n\n  customer: {\n    number: normalizePhone(data.Phone)\n  },\n\n  assistantOverrides: {\n    variableValues: {\n      lead_id: $input.first().json['#']?.toString(),\n      lead_name: data.Name,\n      business_name: data.Company\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        80
+      ],
+      "id": "3e1f8998-7e0f-4f3e-adc7-408d8b9c8639",
+      "name": "Prepare Vapi Payload"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        880,
+        592
+      ],
+      "id": "72c5d60a-043d-4195-acb8-34200441ea70",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.calendly.com/event_type_available_times?event_type={{$vars.CALENDLY_EVENT_TYPE}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "start_time",
+              "value": "={{ $json.body.startTime }}"
+            },
+            {
+              "name": "end_time",
+              "value": "={{ $json.body.endTime }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        816
+      ],
+      "id": "88a68fa7-3fcd-4fdb-84ae-bad3b4e5d371",
+      "name": "Availabiliy",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "4h7zdAzMnhXrdU4E",
+          "name": "Query Auth account"
+        },
+        "httpBasicAuth": {
+          "id": "GmDlveioFuZCa4OQ",
+          "name": "Unnamed credential"
+        },
+        "oAuth2Api": {
+          "id": "S5KaXrOzy8cB4NZi",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        816
+      ],
+      "id": "6fce0d6b-0b48-4f60-80fe-4a03e917816e",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "39759b05-91f5-407e-b3ff-222b9a512878",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        592
+      ],
+      "id": "e4635d84-ea3d-4219-82f0-77a8c1e7c1e1",
+      "name": "Book Meeting",
+      "webhookId": "39759b05-91f5-407e-b3ff-222b9a512878"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "6639dd1d-19d4-4591-ae52-4ade72bead6c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        816
+      ],
+      "id": "5cf4b4e9-b571-4186-9d9a-6e839f15e20a",
+      "name": "Get Available Slots",
+      "webhookId": "6639dd1d-19d4-4591-ae52-4ade72bead6c"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $('Book Meeting').first().json.body;\nconst lead = $input.first().json;\nfunction normalizePhone(phone) {\n  if (typeof phone === 'undefined' || phone === null) {\n    throw new Error('Phone number is undefined or null.');\n  }\n  let cleaned = phone.toString().replace(/[\\s\\-\\(\\)\\.\\+]/g, '');\n\n  // Default to India (10-digit mobile)\n  if (cleaned.length === 10) {\n    return '+91' + cleaned;\n  }\n\n  // Already international\n  if (cleaned.length >= 11 && cleaned.length <= 15) {\n    return '+' + cleaned;\n  }\n\n  throw new Error('Invalid phone number');\n}\nreturn [\n  {\n    json: {\n      event_type: $vars.CALENDLY_EVENT_TYPE,\n      start_time: body.slot, // ISO 8601\n      invitee: {\n        name: lead.Name,\n        email: lead.Email,\n        timezone: lead.timezone,\n        text_reminder_number: normalizePhone(lead.Phone)\n      }\n    }\n  }\n];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        592
+      ],
+      "id": "42a98f2f-8c17-4c12-a5d7-f6ec0fce5660",
+      "name": "Prepare Calendly Payload"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "#",
+              "lookupValue": "={{ $json.body.lead_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        592
+      ],
+      "id": "ba5b77d1-3ba1-47c5-aeca-821245413103",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.calendly.com/invitees",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($input.first().json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        656,
+        592
+      ],
+      "id": "c93476ec-009e-49e9-9596-2e791911c0e7",
+      "name": "Create Event Invitees",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "4h7zdAzMnhXrdU4E",
+          "name": "Query Auth account"
+        },
+        "oAuth2Api": {
+          "id": "S5KaXrOzy8cB4NZi",
+          "name": "Unnamed credential 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "3b2f2906-041d-41d7-a9df-da1a154268ed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        368
+      ],
+      "id": "cda7b506-1fcc-458b-8cc1-3324b5db613f",
+      "name": "End Of Call Report",
+      "webhookId": "3b2f2906-041d-41d7-a9df-da1a154268ed"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "33acea6a-c8f8-4863-90ab-d861e60b8852",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        1040
+      ],
+      "id": "adc7ab2a-5ac1-466c-ab31-e1c19f0ae8a7",
+      "name": "Send Link",
+      "webhookId": "33acea6a-c8f8-4863-90ab-d861e60b8852"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dXq5ZSwJMRBV78W6ie8TLtraNSeOOKpoVZmcdG3weRM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "#",
+              "lookupValue": "={{ $json.body.lead_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        1040
+      ],
+      "id": "a0661c2d-5e99-40c8-8a13-648d86763ea1",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "19yitcoV9Sa3TKFV",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "subject": "Book meeting with Jigar",
+        "textContent": "=Hii {{ $json.Name }}\n\nAs we discussed on call here is link to book meeting \n\nhttps://calendly.com/js10855\n\nThank you",
+        "sender": "piyushsutharmbt@gmail.com",
+        "receipients": "={{ $json.Email }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.sendInBlue",
+      "typeVersion": 1,
+      "position": [
+        432,
+        1040
+      ],
+      "id": "b7a98a98-befa-455e-b6f9-3e7dcd719e44",
+      "name": "Send a transactional email",
+      "credentials": {
+        "sendInBlueApi": {
+          "id": "02SVgnD2oQ5x4mBl",
+          "name": "Brevo account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Prepare Vapi Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clear Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Vapi Payload": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear Status": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Availabiliy": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Meeting": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Available Slots": {
+      "main": [
+        [
+          {
+            "node": "Availabiliy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Calendly Payload": {
+      "main": [
+        [
+          {
+            "node": "Create Event Invitees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Calendly Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event Invitees": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End Of Call Report": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Link": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Send a transactional email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "acd187b3-af45-41dc-bd10-92d5184f8510",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c52bf25175bd48c34fa5d4877c9367b54f8cab0cd6366b46a7cda206ed546550"
+  },
+  "id": "St9okSafimoFI8Yy",
+  "tags": []
+}
